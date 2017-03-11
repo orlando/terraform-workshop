@@ -14,16 +14,11 @@ provider "heroku" {
  * Resources
  */
 
-# Create a Heroku app
-resource "heroku_app" "default" {
-  name   = "my-super-tf-app"
-  region = "us"
-}
+# Create a Heroku app using a module
+module "app" {
+  source = "./modules/heroku_app"
 
-# Create a database, and configure the app to use it
-resource "heroku_addon" "database" {
-  app  = "${heroku_app.default.name}"
-  plan = "heroku-postgresql:hobby-basic"
+  name = "my-super-tf-app"
 }
 
 /*
@@ -31,9 +26,9 @@ resource "heroku_addon" "database" {
 */
 
 output "web_url" {
-  value = "${heroku_app.default.web_url}"
+  value = "${module.app.web_url}"
 }
 
 output "git_url" {
-  value = "${heroku_app.default.git_url}"
+  value = "${module.app.git_url}"
 }
